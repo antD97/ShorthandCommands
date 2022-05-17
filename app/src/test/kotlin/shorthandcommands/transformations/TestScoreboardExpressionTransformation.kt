@@ -30,19 +30,19 @@ class TestScoreboardExpressionTransformation {
         )
 
         // operation with score
-        assertEquals(-1, ScoreboardExpressionTransformation.transform(lines, 0))
+        assertEquals(-1, ScoreboardExpressionTransformation.transform(lines, 0, ""))
         assertEquals(
             "scoreboard players set @s[type=creeper,scores={objective=-111}] \$objective 222",
             lines[0]
         )
 
-        assertEquals(-1, ScoreboardExpressionTransformation.transform(lines, 1))
+        assertEquals(-1, ScoreboardExpressionTransformation.transform(lines, 1, ""))
         assertEquals(
             "scoreboard players add @s[type=creeper,scores={objective=-111}] \$objective -222",
             lines[1]
         )
 
-        assertEquals(-1, ScoreboardExpressionTransformation.transform(lines, 2))
+        assertEquals(-1, ScoreboardExpressionTransformation.transform(lines, 2, ""))
         assertEquals(
             "scoreboard players remove @s[type=creeper,scores={objective=-111}] \$objective 222",
             lines[2]
@@ -51,7 +51,7 @@ class TestScoreboardExpressionTransformation {
         // operation with players
         val operations = listOf("+=", "-=", "*=", "/=", "%=", "=", "<", ">", "><")
         for (i in 3..11) {
-            assertEquals(-1, ScoreboardExpressionTransformation.transform(lines, i))
+            assertEquals(-1, ScoreboardExpressionTransformation.transform(lines, i, ""))
             assertEquals(
                 "scoreboard players operation @s[type=creeper,scores={objective=-111}] " +
                         "\$objective1 ${operations[i - 3]} " +
@@ -61,13 +61,13 @@ class TestScoreboardExpressionTransformation {
         }
 
         // reset
-        assertEquals(-1, ScoreboardExpressionTransformation.transform(lines, 12))
+        assertEquals(-1, ScoreboardExpressionTransformation.transform(lines, 12, ""))
         assertEquals(
             "scoreboard players reset @s[type=creeper,scores={objective=-111}] \$objective",
             lines[12]
         )
 
-        assertEquals(-1, ScoreboardExpressionTransformation.transform(lines, 13))
+        assertEquals(-1, ScoreboardExpressionTransformation.transform(lines, 13, ""))
         assertEquals(
             "scoreboard players reset @s[type=creeper,scores={objective=-111}]",
             lines[13]

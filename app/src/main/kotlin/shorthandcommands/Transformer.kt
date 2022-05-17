@@ -13,7 +13,7 @@ import java.io.FileWriter
 import java.io.IOException
 import kotlin.system.exitProcess
 
-object Transformer {
+internal object Transformer {
 
     /** Transformations to apply when calling [applyTransformations]. */
     private val transformations = listOf(
@@ -21,6 +21,14 @@ object Transformer {
         FunctionDefinitionTransformation, // should go before NamespacePrefixTransformation
         NamespacePrefixTransformation,
         ScoreboardExpressionTransformation
+    )
+
+    internal data class CreateFunctionJob(
+        /** File containing the function's commands. */
+        val file: File,
+        /** The name for the function. */
+        val namespace: String,
+        val functionPath: String
     )
 
     /** List of additional .mcfunction files to create. */
@@ -125,9 +133,7 @@ object Transformer {
         }
     }
 
-    /**
-     * Applies [transformations] to [this] and saves the result to [targetLoc].
-     */
+    /** Applies [transformations] to [this] and saves the result to [targetLoc]. */
     private fun File.applyTransformations(targetLoc: File, nameSpace: String) {
         println("Transforming `${this.path}`...")
 

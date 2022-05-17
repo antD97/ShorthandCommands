@@ -13,11 +13,11 @@ class TestNamespacePrefixTransformation {
     fun testTransform() {
 
         var lines = mutableListOf("Any text $:function_name")
-        assertEquals(0, NamespacePrefixTransformation.transform(lines, 0))
-        assertEquals(mutableListOf("Any text null:function_name"), lines)
+        assertEquals(0, NamespacePrefixTransformation.transform(lines, 0, "some_namespace"))
+        assertEquals(mutableListOf("Any text some_namespace:function_name"), lines)
 
         lines = mutableListOf("Any text \$variable_name")
-        assertEquals(0, NamespacePrefixTransformation.transform(lines, 0))
-        assertEquals(mutableListOf("Any text null_variable_name"), lines)
+        assertEquals(0, NamespacePrefixTransformation.transform(lines, 0, "another_namespace"))
+        assertEquals(mutableListOf("Any text another_namespace_variable_name"), lines)
     }
 }

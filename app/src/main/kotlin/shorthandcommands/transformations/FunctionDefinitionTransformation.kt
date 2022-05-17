@@ -4,7 +4,6 @@
  */
 package shorthandcommands.transformations
 
-import shorthandcommands.CreateFunctionJob
 import shorthandcommands.Transformer
 import java.io.File
 import java.io.FileWriter
@@ -14,11 +13,12 @@ import java.io.FileWriter
  * - (?:^|^.*\s*)function (\S+):(\S+) \{\s*$ function that's run immediately
  * - ^\s*(\S+):(\S+) \{\s*$ function that is created, but not run immediately
  */
-object FunctionDefinitionTransformation : Transformation {
+internal object FunctionDefinitionTransformation : Transformation {
 
     override fun transform(lines: MutableList<String>, i: Int, namespace: String): Int? {
 
-        val runImmediatelyGroups = "(?:^|^.*\\s*)function (\\S+):(\\S+) \\{\\s*\$".toRegex().find(lines[i])?.groupValues
+        val runImmediatelyGroups = "(?:^|^.*\\s*)function (\\S+):(\\S+) \\{\\s*\$".toRegex()
+            .find(lines[i])?.groupValues
         val createOnlyGroups = "^\\s*(\\S+):(\\S+) \\{\\s*\$".toRegex().find(lines[i])?.groupValues
 
         val (_, namespace, functionPath) = when {
@@ -81,7 +81,9 @@ object FunctionDefinitionTransformation : Transformation {
             }
         }
 
-        Transformer.createFunctionJobs.add(CreateFunctionJob(tempFile, namespace, functionPath))
+        Transformer.createFunctionJobs.add(
+            Transformer.CreateFunctionJob(tempFile, namespace, functionPath)
+        )
 
         // remove lines i+1->j
         for (k in j downTo (i + 1)) lines.removeAt(k)

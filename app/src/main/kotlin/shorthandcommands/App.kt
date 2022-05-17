@@ -14,8 +14,15 @@ fun main() {
 
     // load from properties file
     val properties = Properties()
+
+    val propertiesFile = File("shorthand.conf")
+    if (!propertiesFile.isFile) {
+        println("Could not locate configuration file `${propertiesFile.absolutePath}`.\nExiting...")
+        exitProcess(-1)
+    }
+
     // replace \ with \\ before loading the configuration file
-    File("shorthand.conf").readText()
+    propertiesFile.readText()
         .replace("\\", "\\\\")
         .let { StringReader(it).use { sr -> properties.load(sr) } }
 

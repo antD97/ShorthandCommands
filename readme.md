@@ -12,7 +12,7 @@ can understand.
 - [Converter tool download](https://github.com/antD97/ShorthandCommands/releases/tag/v1.0)
 - [Wiki](https://github.com/antD97/ShorthandCommands/wiki)
 - [Issue page](https://github.com/antD97/ShorthandCommands/issues)
-- My Shorthand Commands datapack [Death Curse](https://github.com/antD97/DeathCurse)
+- My Shorthand Commands datapack: [Death Curse](https://github.com/antD97/DeathCurse)
 <!-- - [Reddit thread]() -->
 
 # Usage
@@ -49,7 +49,10 @@ converted projects to that directory instead.
 
 ## Building
 
-Run: `./gradlew createBundledRelease`. The output is located in `build/bundledRelease`.
+Run: `./gradlew release`. The output is located in `app/build/release`.
+
+If running from IntelliJ IDEA, modify the run configuration and set the "Working directory" to the
+`app` directory.
 
 # Features
 

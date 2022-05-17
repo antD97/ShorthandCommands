@@ -33,7 +33,7 @@ class TestFunctionDefinitionTransformation {
         )
 
         // nested create function only
-        assertEquals(-1, FunctionDefinitionTransformation.transform(lines, 8))
+        assertEquals(-1, FunctionDefinitionTransformation.transform(lines, 8, "namespace"))
         assertEquals(
             mutableListOf(
                 "function namespace:some/function/name {   ",
@@ -57,7 +57,7 @@ class TestFunctionDefinitionTransformation {
         assertEquals("statement seven\nstatement eight\nstatement nine\n", job.file.readText())
 
         // create and run nested function with preceding words
-        assertEquals(0, FunctionDefinitionTransformation.transform(lines, 4))
+        assertEquals(0, FunctionDefinitionTransformation.transform(lines, 4, "namespace"))
         assertEquals(
             mutableListOf(
                 "function namespace:some/function/name {   ",
@@ -77,7 +77,7 @@ class TestFunctionDefinitionTransformation {
         assertEquals("statement four\nstatement five\nstatement six\n", job.file.readText())
 
         // create and run function with no preceding words
-        assertEquals(0, FunctionDefinitionTransformation.transform(lines, 0))
+        assertEquals(0, FunctionDefinitionTransformation.transform(lines, 0, "namespace"))
         assertEquals(
             mutableListOf(
                 "function namespace:some/function/name",

@@ -17,7 +17,7 @@ class TestLineBreakTransformation {
             "    , and here's some more text. \\",
             "    Another line!"
         )
-        assertEquals(-1, LineBreakTransformation.transform(lines, 0))
+        assertEquals(-1, LineBreakTransformation.transform(lines, 0, ""))
         assertEquals(
             mutableListOf(
                 "Any text can go here, and here's some more text. \\",
@@ -26,13 +26,13 @@ class TestLineBreakTransformation {
             lines
         )
 
-        assertEquals(-1, LineBreakTransformation.transform(lines, 0))
+        assertEquals(-1, LineBreakTransformation.transform(lines, 0, ""))
         assertEquals(
             mutableListOf("Any text can go here, and here's some more text. Another line!"),
             lines
         )
 
-        assertEquals(0, LineBreakTransformation.transform(lines, 0))
+        assertEquals(0, LineBreakTransformation.transform(lines, 0, ""))
         assertEquals(
             mutableListOf("Any text can go here, and here's some more text. Another line!"),
             lines

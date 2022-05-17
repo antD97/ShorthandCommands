@@ -21,7 +21,7 @@ internal object FunctionDefinitionTransformation : Transformation {
             .find(lines[i])?.groupValues
         val createOnlyGroups = "^\\s*(\\S+):(\\S+) \\{\\s*\$".toRegex().find(lines[i])?.groupValues
 
-        val (_, namespace, functionPath) = when {
+        val (_, functionNamespace, functionPath) = when {
             runImmediatelyGroups != null -> {
                 // remove trailing " {"
                 lines[i] = lines[i].trimEnd().removeSuffix(" {")
@@ -82,7 +82,7 @@ internal object FunctionDefinitionTransformation : Transformation {
         }
 
         Transformer.createFunctionJobs.add(
-            Transformer.CreateFunctionJob(tempFile, namespace, functionPath)
+            Transformer.CreateFunctionJob(tempFile, functionNamespace, functionPath)
         )
 
         // remove lines i+1->j

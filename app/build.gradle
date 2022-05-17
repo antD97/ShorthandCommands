@@ -14,6 +14,11 @@ repositories {
     mavenCentral()
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
 dependencies {
     implementation platform('org.jetbrains.kotlin:kotlin-bom')
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
@@ -27,10 +32,11 @@ task release() {
         def releaseDir = "$buildDir/release/$projName-${version}"
         def bundleDir = "$project.projectDir/bundle"
         copy {
-            from "$buildDir/libs", bundleDir, "$project.projectDir/shorthand.conf"
+            from "$buildDir/libs/app-${version}-all.jar", bundleDir, "$project.projectDir/shorthand.conf"
             into "$releaseDir"
             rename "app-${version}-all.jar", "$projName-${version}.jar"
         }
+        mkdir("$releaseDir/output")
     }
 }
 

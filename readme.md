@@ -12,6 +12,7 @@ can understand.
 - [Converter tool download](https://github.com/antD97/ShorthandCommands/releases/tag/v1.0)
 - [Wiki](https://github.com/antD97/ShorthandCommands/wiki)
 - [Issue page](https://github.com/antD97/ShorthandCommands/issues)
+- My Shorthand Commands datapack [Death Curse](https://github.com/antD97/DeathCurse)
 <!-- - [Reddit thread]() -->
 
 # Usage

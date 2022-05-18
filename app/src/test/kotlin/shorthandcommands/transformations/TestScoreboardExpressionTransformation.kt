@@ -26,7 +26,8 @@ class TestScoreboardExpressionTransformation {
             "#!sb @s[type=creeper,scores={objective=-111}] \$objective1 > @s[type=zombie,scores={objective=-222}] \$objective2",
             "#!sb @s[type=creeper,scores={objective=-111}] \$objective1 >< @s[type=zombie,scores={objective=-222}] \$objective2",
             "#!sb reset @s[type=creeper,scores={objective=-111}] \$objective",
-            "#!sb reset @s[type=creeper,scores={objective=-111}]"
+            "#!sb reset @s[type=creeper,scores={objective=-111}]",
+            "#!sb enable @s[type=creeper,scores={objective=-111}] \$objective"
         )
 
         // operation with score
@@ -71,6 +72,13 @@ class TestScoreboardExpressionTransformation {
         assertEquals(
             "scoreboard players reset @s[type=creeper,scores={objective=-111}]",
             lines[13]
+        )
+
+        // enable
+        assertEquals(-1, ScoreboardExpressionTransformation.transform(lines, 14, ""))
+        assertEquals(
+            "scoreboard players enable @s[type=creeper,scores={objective=-111}] \$objective",
+            lines[14]
         )
     }
 }

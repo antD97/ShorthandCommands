@@ -27,7 +27,7 @@ dependencies {
 }
 
 task release() {
-    dependsOn('shadowJar')
+    dependsOn('test', 'shadowJar')
     doLast {
         def releaseDir = "$buildDir/release/$projName-${version}"
         def bundleDir = "$project.projectDir/bundle"

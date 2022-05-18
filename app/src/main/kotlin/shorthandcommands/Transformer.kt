@@ -13,19 +13,19 @@ import kotlin.system.exitProcess
 
 internal object Transformer {
 
-    /** Transformations to apply first when calling [applyTransformations]. */
-    private val transformations1 = listOf(
-        HideLintTransformation // must be applied first
-    )
-
-    /** Transformations to apply second when calling [applyTransformations]. */
-    private val transformations2 = listOf(
-        LineBreakTransformation, // must be applied after HideLintTransformation
-        NamespacePrefixTransformation, // must be applied before FunctionDefinitionTransformation
-        FunctionDefinitionTransformation,
-        RepeatLineTransformation,
-        ScoreboardExpressionTransformation,
-        MultiTypeEntitySelectorTransformation
+    /** Transformation groups to apply when calling [applyTransformations]. */
+    private val transformationGroups = listOf(
+        listOf(
+            HideLintTransformation // must be applied first
+        ),
+        listOf(
+            LineBreakTransformation, // must be applied after HideLintTransformation
+            NamespacePrefixTransformation, // must be applied before FunctionDefinitionTransformation
+            FunctionDefinitionTransformation,
+            RepeatLineTransformation,
+            ScoreboardExpressionTransformation,
+            MultiTypeEntitySelectorTransformation
+        )
     )
 
     internal data class CreateFunctionJob(
@@ -138,25 +138,27 @@ internal object Transformer {
         }
     }
 
-    /** Applies [transformations2] to [this] and saves the result to [targetLoc]. */
+    /** Applies [transformationGroups] to [this] and saves the result to [targetLoc]. */
     private fun File.applyTransformations(targetLoc: File, nameSpace: String) {
         println("Transforming `${this.path}`...")
 
         // transform lines
         val lines = this.readLines().toMutableList()
 
-        // first transformation list
-        var i = 0
-        while (i <= lines.lastIndex) {
-            for (t in transformations1) i += t.transform(lines, i, nameSpace) ?: exitProcess(-1)
-            i++
-        }
+        // for each transformation group
+        for (transformationGroup in transformationGroups) {
 
-        // second transformation list
-        i = 0
-        while (i <= lines.lastIndex) {
-            for (t in transformations2) i += t.transform(lines, i, nameSpace) ?: exitProcess(-1)
-            i++
+            // for each line
+            var i = 0
+            while (i <= lines.lastIndex) {
+
+                // apply each transformation in the group
+                for (transformation in transformationGroup) {
+                    i += transformation.transform(lines, i, nameSpace) ?: exitProcess(-1)
+                }
+
+                i++
+            }
         }
 
         // only if there is at least one command in the file...

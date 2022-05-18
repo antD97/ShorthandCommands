@@ -18,6 +18,10 @@ import shorthandcommands.component6
  * scoreboard players reset <targets> [<objective>]
  * #!sb reset <targets> [<objective>]
  * (?:\s|^)#!sb reset (\S+)( \S+)?(?:\s|$)
+ *
+ * scoreboard players enable <targets> <objective>
+ * #!sb enable <targets> <objective>
+ * (?:\s|^)#!sb enable (\S+) (\S+)(?:\s|$)
  */
 object ScoreboardExpressionTransformation : Transformation {
 
@@ -81,6 +85,23 @@ object ScoreboardExpressionTransformation : Transformation {
                 resetMatchGroups[0].trim(),
                 if (objective != "") "scoreboard players reset $targets $objective"
                 else "scoreboard players reset $targets"
+            )
+
+            return -1
+        }
+
+        // enable
+        val enableMatchGroups = "(?:\\s|^)#!sb enable (\\S+) (\\S+)(?:\\s|\$)".toRegex()
+            .find(lines[i])
+            ?.groupValues
+
+        if (enableMatchGroups != null) {
+            val targets = enableMatchGroups[1]
+            val objective = enableMatchGroups[2]
+
+            lines[i] = lines[i].replace(
+                enableMatchGroups[0].trim(),
+                "scoreboard players enable $targets $objective"
             )
 
             return -1

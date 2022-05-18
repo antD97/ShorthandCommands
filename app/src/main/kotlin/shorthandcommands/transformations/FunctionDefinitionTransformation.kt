@@ -61,7 +61,7 @@ internal object FunctionDefinitionTransformation : Transformation {
         }
 
         // matching } on its own line
-        if (lines[j].trim() != "}") {
+        if (lines[j].trim().removePrefix("#! ").trimStart() != "}") {
             println(
                 "Closing bracket for \"$functionPath\" needs to be on its own line.\n" +
                         "Exiting..."

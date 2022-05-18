@@ -4,10 +4,8 @@
  */
 package shorthandcommands
 
+import shorthandcommands.transformations.*
 import shorthandcommands.transformations.FunctionDefinitionTransformation
-import shorthandcommands.transformations.LineBreakTransformation
-import shorthandcommands.transformations.NamespacePrefixTransformation
-import shorthandcommands.transformations.ScoreboardExpressionTransformation
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
@@ -17,10 +15,13 @@ internal object Transformer {
 
     /** Transformations to apply when calling [applyTransformations]. */
     private val transformations = listOf(
-        LineBreakTransformation, // must be applied first
-        FunctionDefinitionTransformation, // should go before NamespacePrefixTransformation
-        NamespacePrefixTransformation,
-        ScoreboardExpressionTransformation
+        HideLintTransformation, // must be applied first
+        LineBreakTransformation, // must be applied after HideLintTransformation
+        NamespacePrefixTransformation, // must be applied before FunctionDefinitionTransformation
+        FunctionDefinitionTransformation,
+        RepeatLineTransformation,
+        ScoreboardExpressionTransformation,
+        MultiTypeEntitySelectorTransformation
     )
 
     internal data class CreateFunctionJob(
@@ -149,10 +150,13 @@ internal object Transformer {
             i++
         }
 
-        // write lines
-        FileWriter(targetLoc).use {
-            for (line in lines) {
-                it.write("$line\n")
+        // only if there is at least one command in the file...
+        if (lines.map { it.trim() }.filter{ it != "" }.any { !it.startsWith("#") }) {
+            // write lines
+            FileWriter(targetLoc).use {
+                for (line in lines) {
+                    it.write("$line\n")
+                }
             }
         }
     }

@@ -35,16 +35,16 @@ fun main() {
         exitProcess(-1)
     }
 
-    val buildDir = File(properties.getProperty("build") ?: badConfig("build"))
+    val saveDir = File(properties.getProperty("save") ?: badConfig("save"))
 
-    // build directory check
-    if (!buildDir.isDirectory) {
-        println("Build directory `${buildDir.path}` from `shorthand.conf` is not a directory." +
+    // save directory check
+    if (!saveDir.isDirectory) {
+        println("Save directory `${saveDir.path}` from `shorthand.conf` is not a directory." +
                 "\nExiting...")
         exitProcess(-1)
     }
 
-    val transformedProjDir = buildDir.resolve(projDir.name)
+    val transformedProjDir = saveDir.resolve(projDir.name)
 
     // transformed project directory check
     if (transformedProjDir.isFile) {
@@ -55,10 +55,10 @@ fun main() {
         exitProcess(-1)
     }
 
-    // transformed project directory = build directory check
+    // transformed project directory = save directory check
     if (projDir.canonicalFile == transformedProjDir.canonicalFile) {
         println("The save location for the converted project is the same as the project " +
-                "directory `${projDir.path}`. Please change the build location in " +
+                "directory `${projDir.path}`. Please change the save location in " +
                 "`shorthand.conf` file and run the tool again." +
                 "\nExiting...")
         exitProcess(-1)

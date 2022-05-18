@@ -99,8 +99,8 @@ scoreboard players set @a $cool 100
 A shortened way of writing `scoreboard player ...` commands.
 
 ```
-#sb @s[type=creeper,scores={objective=111}] objective = 222
-#sb @s[type=creeper,scores={objective=111}] objective %= @s[type=zombie,scores={objective=222}] objective"
+#!sb @s[type=creeper,scores={objective=111}] objective = 222
+#!sb @s[type=creeper,scores={objective=111}] objective %= @s[type=zombie,scores={objective=222}] objective"
 ```
 
 ## [Repeat Lines](https://github.com/antD97/ShorthandCommands/wiki/Repeat-Lines)
@@ -108,7 +108,7 @@ A shortened way of writing `scoreboard player ...` commands.
 Repeat a line `n` times.
 
 ```
-particle minecraft:ambient_entity_effect ~ ~ ~ 170 0 0 255 0 #10x
+#!10x particle minecraft:ambient_entity_effect ~ ~ ~ 170 0 0 255 0
 ```
 
 ## [Multi-type Entity Selectors](https://github.com/antD97/ShorthandCommands/wiki/Multi-type-Entity-Selectors)

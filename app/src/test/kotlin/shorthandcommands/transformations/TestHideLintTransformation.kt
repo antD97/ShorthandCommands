@@ -15,7 +15,7 @@ class TestHideLintTransformation {
         val lines = mutableListOf(
             "     #!   Line 1",
             "    # Don't touch this line!",
-            "#!Line 2",
+            "#!Needs a space",
             "Don't touch this line either!",
         )
 
@@ -26,7 +26,7 @@ class TestHideLintTransformation {
         assertEquals("    # Don't touch this line!", lines[1])
 
         assertEquals(0, HideLintTransformation.transform(lines, 2, ""))
-        assertEquals("Line 2", lines[2])
+        assertEquals("#!Needs a space", lines[2])
 
         assertEquals(0, HideLintTransformation.transform(lines, 3, ""))
         assertEquals("Don't touch this line either!", lines[3])

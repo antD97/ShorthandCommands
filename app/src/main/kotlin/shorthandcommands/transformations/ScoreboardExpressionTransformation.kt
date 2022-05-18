@@ -8,23 +8,23 @@ import shorthandcommands.component6
 
 /**
  * scoreboard players <set,add,remove> <targets> <objective> <score>
- * #sb <targets> <objective> < =, +=, -= > <score>
- * (?:\s|^)#sb (\S+) (\S+) (=|\+=|-=) (-?\d+)(?:\s|$)
+ * #!sb <targets> <objective> < =, +=, -= > <score>
+ * (?:\s|^)#!sb (\S+) (\S+) (=|\+=|-=) (-?\d+)(?:\s|$)
  *
  * scoreboard players operation <targets> <targetObjective> <operation> <source> <sourceObjective>
- * #sb <targets> <targetObjective> <operation> <source> <sourceObjective>
- * (?:\s|^)#sb (\S+) (\S+) (\+=|-=|\*=|\/=|%=|=|<|>|><) (\S+) (\S+)(?:\s|$)
+ * #!sb <targets> <targetObjective> <operation> <source> <sourceObjective>
+ * (?:\s|^)#!sb (\S+) (\S+) (\+=|-=|\*=|\/=|%=|=|<|>|><) (\S+) (\S+)(?:\s|$)
  *
  * scoreboard players reset <targets> [<objective>]
- * #sb reset <targets> [<objective>]
- * (?:\s|^)#sb reset (\S+)( \S+)?(?:\s|$)
+ * #!sb reset <targets> [<objective>]
+ * (?:\s|^)#!sb reset (\S+)( \S+)?(?:\s|$)
  */
 object ScoreboardExpressionTransformation : Transformation {
 
     override fun transform(lines: MutableList<String>, i: Int, namespace: String): Int {
 
         // operation with score
-        val scoreOperationMatchGroups = "(?:\\s|^)#sb (\\S+) (\\S+) (=|\\+=|-=) (-?\\d+)(?:\\s|\$)"
+        val scoreOperationMatchGroups = "(?:\\s|^)#!sb (\\S+) (\\S+) (=|\\+=|-=) (-?\\d+)(?:\\s|\$)"
             .toRegex()
             .find(lines[i])
             ?.groupValues
@@ -51,7 +51,7 @@ object ScoreboardExpressionTransformation : Transformation {
 
         // operation with players
         val playersOperationMatchGroups =
-            "(?:\\s|^)#sb (\\S+) (\\S+) (\\+=|-=|\\*=|\\/=|%=|=|<|>|><) (\\S+) (\\S+)(?:\\s|\$)"
+            "(?:\\s|^)#!sb (\\S+) (\\S+) (\\+=|-=|\\*=|\\/=|%=|=|<|>|><) (\\S+) (\\S+)(?:\\s|\$)"
                 .toRegex()
                 .find(lines[i])
                 ?.groupValues
@@ -69,7 +69,7 @@ object ScoreboardExpressionTransformation : Transformation {
         }
 
         // reset
-        val resetMatchGroups = "(?:\\s|^)#sb reset (\\S+)( \\S+)?(?:\\s|\$)".toRegex()
+        val resetMatchGroups = "(?:\\s|^)#!sb reset (\\S+)( \\S+)?(?:\\s|\$)".toRegex()
             .find(lines[i])
             ?.groupValues
 

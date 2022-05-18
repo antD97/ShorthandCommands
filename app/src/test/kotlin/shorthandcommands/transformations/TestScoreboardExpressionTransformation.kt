@@ -13,20 +13,20 @@ class TestScoreboardExpressionTransformation {
     fun testTransform() {
 
         val lines = mutableListOf(
-            "#sb @s[type=creeper,scores={objective=-111}] \$objective = 222",
-            "#sb @s[type=creeper,scores={objective=-111}] \$objective += -222",
-            "#sb @s[type=creeper,scores={objective=-111}] \$objective -= 222",
-            "#sb @s[type=creeper,scores={objective=-111}] \$objective1 += @s[type=zombie,scores={objective=-222}] \$objective2",
-            "#sb @s[type=creeper,scores={objective=-111}] \$objective1 -= @s[type=zombie,scores={objective=-222}] \$objective2",
-            "#sb @s[type=creeper,scores={objective=-111}] \$objective1 *= @s[type=zombie,scores={objective=-222}] \$objective2",
-            "#sb @s[type=creeper,scores={objective=-111}] \$objective1 /= @s[type=zombie,scores={objective=-222}] \$objective2",
-            "#sb @s[type=creeper,scores={objective=-111}] \$objective1 %= @s[type=zombie,scores={objective=-222}] \$objective2",
-            "#sb @s[type=creeper,scores={objective=-111}] \$objective1 = @s[type=zombie,scores={objective=-222}] \$objective2",
-            "#sb @s[type=creeper,scores={objective=-111}] \$objective1 < @s[type=zombie,scores={objective=-222}] \$objective2",
-            "#sb @s[type=creeper,scores={objective=-111}] \$objective1 > @s[type=zombie,scores={objective=-222}] \$objective2",
-            "#sb @s[type=creeper,scores={objective=-111}] \$objective1 >< @s[type=zombie,scores={objective=-222}] \$objective2",
-            "#sb reset @s[type=creeper,scores={objective=-111}] \$objective",
-            "#sb reset @s[type=creeper,scores={objective=-111}]"
+            "#!sb @s[type=creeper,scores={objective=-111}] \$objective = 222",
+            "#!sb @s[type=creeper,scores={objective=-111}] \$objective += -222",
+            "#!sb @s[type=creeper,scores={objective=-111}] \$objective -= 222",
+            "#!sb @s[type=creeper,scores={objective=-111}] \$objective1 += @s[type=zombie,scores={objective=-222}] \$objective2",
+            "#!sb @s[type=creeper,scores={objective=-111}] \$objective1 -= @s[type=zombie,scores={objective=-222}] \$objective2",
+            "#!sb @s[type=creeper,scores={objective=-111}] \$objective1 *= @s[type=zombie,scores={objective=-222}] \$objective2",
+            "#!sb @s[type=creeper,scores={objective=-111}] \$objective1 /= @s[type=zombie,scores={objective=-222}] \$objective2",
+            "#!sb @s[type=creeper,scores={objective=-111}] \$objective1 %= @s[type=zombie,scores={objective=-222}] \$objective2",
+            "#!sb @s[type=creeper,scores={objective=-111}] \$objective1 = @s[type=zombie,scores={objective=-222}] \$objective2",
+            "#!sb @s[type=creeper,scores={objective=-111}] \$objective1 < @s[type=zombie,scores={objective=-222}] \$objective2",
+            "#!sb @s[type=creeper,scores={objective=-111}] \$objective1 > @s[type=zombie,scores={objective=-222}] \$objective2",
+            "#!sb @s[type=creeper,scores={objective=-111}] \$objective1 >< @s[type=zombie,scores={objective=-222}] \$objective2",
+            "#!sb reset @s[type=creeper,scores={objective=-111}] \$objective",
+            "#!sb reset @s[type=creeper,scores={objective=-111}]"
         )
 
         // operation with score

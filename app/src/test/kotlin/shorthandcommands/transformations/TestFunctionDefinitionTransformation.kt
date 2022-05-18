@@ -27,7 +27,7 @@ class TestFunctionDefinitionTransformation {
             "            statement eight",
             "            statement nine",
             "        }",
-            "  #!  }",
+            "    }",
             "}",
             "after the function body"
         )
@@ -44,7 +44,7 @@ class TestFunctionDefinitionTransformation {
                 "        statement four",
                 "        statement five",
                 "        statement six",
-                "  #!  }",
+                "    }",
                 "}",
                 "after the function body"
             ),

@@ -13,9 +13,13 @@ import kotlin.system.exitProcess
 
 internal object Transformer {
 
-    /** Transformations to apply when calling [applyTransformations]. */
-    private val transformations = listOf(
-        HideLintTransformation, // must be applied first
+    /** Transformations to apply first when calling [applyTransformations]. */
+    private val transformations1 = listOf(
+        HideLintTransformation // must be applied first
+    )
+
+    /** Transformations to apply second when calling [applyTransformations]. */
+    private val transformations2 = listOf(
         LineBreakTransformation, // must be applied after HideLintTransformation
         NamespacePrefixTransformation, // must be applied before FunctionDefinitionTransformation
         FunctionDefinitionTransformation,
@@ -134,19 +138,24 @@ internal object Transformer {
         }
     }
 
-    /** Applies [transformations] to [this] and saves the result to [targetLoc]. */
+    /** Applies [transformations2] to [this] and saves the result to [targetLoc]. */
     private fun File.applyTransformations(targetLoc: File, nameSpace: String) {
         println("Transforming `${this.path}`...")
 
         // transform lines
         val lines = this.readLines().toMutableList()
+
+        // first transformation list
         var i = 0
         while (i <= lines.lastIndex) {
+            for (t in transformations1) i += t.transform(lines, i, nameSpace) ?: exitProcess(-1)
+            i++
+        }
 
-            for (transformation in transformations) {
-                i += transformation.transform(lines, i, nameSpace) ?: exitProcess(-1)
-            }
-
+        // second transformation list
+        i = 0
+        while (i <= lines.lastIndex) {
+            for (t in transformations2) i += t.transform(lines, i, nameSpace) ?: exitProcess(-1)
             i++
         }
 

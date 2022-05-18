@@ -10,26 +10,32 @@ import java.io.FileWriter
 
 /**
  * Transformation that takes function bodies and creates new .mcfunction files for them.
- * - (?:^|^.*\s*)function (\S+):(\S+) \{\s*$ function that's run immediately
- * - ^\s*(\S+):(\S+) \{\s*$ function that is created, but not run immediately
+ * - Define & execute regex: `(?<=^|\s)function (\S+):(\S+)(?=\s|$)`
+ * - Define only regex: `^\s*(\S+):(\S+)(?=\s|$)` function that is created, but not run immediately
  */
 internal object FunctionDefinitionTransformation : Transformation {
 
     override fun transform(lines: MutableList<String>, i: Int, namespace: String): Int? {
 
-        val runImmediatelyGroups = "(?:^|^.*\\s*)function (\\S+):(\\S+) \\{\\s*\$".toRegex()
-            .find(lines[i])?.groupValues
-        val createOnlyGroups = "^\\s*(\\S+):(\\S+) \\{\\s*\$".toRegex().find(lines[i])?.groupValues
+        if (lines[i].trim() != "{") return 0
 
-        val (_, functionNamespace, functionPath) = when {
-            runImmediatelyGroups != null -> {
-                // remove trailing " {"
-                lines[i] = lines[i].trimEnd().removeSuffix(" {")
-                runImmediatelyGroups
-            }
-            createOnlyGroups != null -> createOnlyGroups
-            else -> return 0 // regex doesn't match
+        if (i == 0) {
+            println("No line preceding { to create a function definition." +
+                    "\nExiting...")
+            return null
         }
+
+        val (fullDefinition, functionNamespace,functionPath) =
+            "(?<=^|\\s)function (\\S+):(\\S+)(?=\\s|\$)".toRegex()
+                .find(lines[i - 1])?.groupValues
+                ?: "^\\s*(\\S+):(\\S+)(?=\\s|\$)".toRegex()
+                    .find(lines[i - 1])?.groupValues
+                    ?.mapIndexed { _i, s -> if (_i == 0) s.trimStart() else s }
+                ?: run {
+                    println("Could not parse function definition from \"${lines[i - 1]}\"." +
+                            "\nExiting...")
+                    return null
+                }
 
         // find closing }
         var depth = 0
@@ -60,8 +66,8 @@ internal object FunctionDefinitionTransformation : Transformation {
             return null
         }
 
-        // matching } on its own line
-        if (lines[j].trim().removePrefix("#! ").trimStart() != "}") {
+        // check matching } is on its own line
+        if (lines[j].trim() != "}") {
             println(
                 "Closing bracket for \"$functionPath\" needs to be on its own line.\n" +
                         "Exiting..."
@@ -69,33 +75,29 @@ internal object FunctionDefinitionTransformation : Transformation {
             return null
         }
 
-        // remove closing bracket line
+        // remove brackets
         lines.removeAt(j)
-        j--
+        lines.removeAt(i)
+        j -= 2
 
-        // save lines i+1->j as a CreateFunctionJob
+        // save lines i->j as a CreateFunctionJob
         val tempFile = File.createTempFile(functionPath, ".mcfunction")
         FileWriter(tempFile).use {
-            for (k in (i + 1)..j) {
-                it.write("${lines[k].trimStart()}\n")
-            }
+            for (k in i..j) it.write("${lines[k].trimStart()}\n")
         }
 
         Transformer.createFunctionJobs.add(
             Transformer.CreateFunctionJob(tempFile, functionNamespace, functionPath)
         )
 
-        // remove lines i+1->j
-        for (k in j downTo (i + 1)) lines.removeAt(k)
+        // remove lines i->j
+        for (k in j downTo i) lines.removeAt(k)
 
-        return when {
-            runImmediatelyGroups != null -> 0
-            createOnlyGroups != null -> {
-                // remove the line completely
-                lines.removeAt(i)
-                -1
-            }
-            else -> throw java.lang.IllegalStateException()
+        return if (fullDefinition.startsWith("function ")) -1
+        else {
+            // remove definition line
+            lines.removeAt(i - 1)
+            -2
         }
     }
 }

@@ -7,6 +7,7 @@ package shorthandcommands.transformations
 import org.junit.Test
 import shorthandcommands.Transformer
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 class TestFunctionDefinitionTransformation {
 
@@ -14,15 +15,18 @@ class TestFunctionDefinitionTransformation {
     fun testTransform() {
 
         val lines = mutableListOf(
-            "function namespace:some/function/name {   ",
+            "function namespace:some/function/name    ",
+            "{   ",
             "    statement one",
             "    statement two",
             "    statement three",
-            "    word word function namespace2:nested/function {   ",
+            "    word word function namespace2:nested/function    ",
+            "    {",
             "        statement four",
             "        statement five",
             "        statement six",
-            "        namespace3:create/only/function {   ",
+            "        namespace3:create/only/function    ",
+            "        {    ",
             "            statement seven",
             "            statement eight",
             "            statement nine",
@@ -33,14 +37,16 @@ class TestFunctionDefinitionTransformation {
         )
 
         // nested create function only
-        assertEquals(-1, FunctionDefinitionTransformation.transform(lines, 8, "namespace"))
+        assertEquals(-2, FunctionDefinitionTransformation.transform(lines, 11, "namespace"))
         assertEquals(
             mutableListOf(
-                "function namespace:some/function/name {   ",
+                "function namespace:some/function/name    ",
+                "{   ",
                 "    statement one",
                 "    statement two",
                 "    statement three",
-                "    word word function namespace2:nested/function {   ",
+                "    word word function namespace2:nested/function    ",
+                "    {",
                 "        statement four",
                 "        statement five",
                 "        statement six",
@@ -57,14 +63,15 @@ class TestFunctionDefinitionTransformation {
         assertEquals("statement seven\nstatement eight\nstatement nine\n", job.file.readText())
 
         // create and run nested function with preceding words
-        assertEquals(0, FunctionDefinitionTransformation.transform(lines, 4, "namespace"))
+        assertEquals(-1, FunctionDefinitionTransformation.transform(lines, 6, "namespace"))
         assertEquals(
             mutableListOf(
-                "function namespace:some/function/name {   ",
+                "function namespace:some/function/name    ",
+                "{   ",
                 "    statement one",
                 "    statement two",
                 "    statement three",
-                "    word word function namespace2:nested/function",
+                "    word word function namespace2:nested/function    ",
                 "}",
                 "after the function body"
             ),
@@ -77,10 +84,10 @@ class TestFunctionDefinitionTransformation {
         assertEquals("statement four\nstatement five\nstatement six\n", job.file.readText())
 
         // create and run function with no preceding words
-        assertEquals(0, FunctionDefinitionTransformation.transform(lines, 0, "namespace"))
+        assertEquals(-1, FunctionDefinitionTransformation.transform(lines, 1, "namespace"))
         assertEquals(
             mutableListOf(
-                "function namespace:some/function/name",
+                "function namespace:some/function/name    ",
                 "after the function body"
             ),
             lines
@@ -93,8 +100,18 @@ class TestFunctionDefinitionTransformation {
             "statement one\n" +
                     "statement two\n" +
                     "statement three\n" +
-                    "word word function namespace2:nested/function\n",
+                    "word word function namespace2:nested/function    \n",
             job.file.readText()
+        )
+
+        // error checking
+        assertNull(FunctionDefinitionTransformation.transform(mutableListOf("{"), 0, ""))
+        assertNull(FunctionDefinitionTransformation.transform(mutableListOf("bad a:b", "{"), 1, ""))
+        assertNull(FunctionDefinitionTransformation.transform(mutableListOf("a:b", "{"), 1, ""))
+        assertNull(FunctionDefinitionTransformation.transform(
+            mutableListOf("a:b", "{", "}o"),
+            1,
+            "")
         )
     }
 }

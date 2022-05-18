@@ -13,19 +13,15 @@ import kotlin.system.exitProcess
 
 internal object Transformer {
 
-    /** Transformation groups to apply when calling [applyTransformations]. */
-    private val transformationGroups = listOf(
-        listOf(
-            HideLintTransformation // must be applied first
-        ),
-        listOf(
-            LineBreakTransformation, // must be applied after HideLintTransformation
-            NamespacePrefixTransformation, // must be applied before FunctionDefinitionTransformation
-            FunctionDefinitionTransformation,
-            RepeatLineTransformation,
-            ScoreboardExpressionTransformation,
-            MultiTypeEntitySelectorTransformation
-        )
+    /** Transformations to apply when calling [applyTransformations]. */
+    private val transformations = listOf(
+        HideLintTransformation, // must be applied first
+        LineBreakTransformation, // must be applied after HideLintTransformation
+        NamespacePrefixTransformation, // must be applied before FunctionDefinitionTransformation
+        FunctionDefinitionTransformation,
+        RepeatLineTransformation,
+        ScoreboardExpressionTransformation,
+        FindMultiReplaceTransformation
     )
 
     internal data class CreateFunctionJob(
@@ -138,25 +134,18 @@ internal object Transformer {
         }
     }
 
-    /** Applies [transformationGroups] to [this] and saves the result to [targetLoc]. */
+    /** Applies [transformations] to [this] and saves the result to [targetLoc]. */
     private fun File.applyTransformations(targetLoc: File, nameSpace: String) {
         println("Transforming `${this.path}`...")
 
-        // transform lines
         val lines = this.readLines().toMutableList()
 
-        // for each transformation group
-        for (transformationGroup in transformationGroups) {
-
+        // for each transformation
+        for (transformation in transformations) {
             // for each line
             var i = 0
             while (i <= lines.lastIndex) {
-
-                // apply each transformation in the group
-                for (transformation in transformationGroup) {
-                    i += transformation.transform(lines, i, nameSpace) ?: exitProcess(-1)
-                }
-
+                i += transformation.transform(lines, i, nameSpace) ?: exitProcess(-1)
                 i++
             }
         }

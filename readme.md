@@ -70,28 +70,30 @@ along with detailed descriptions.
 Define multiple mcfunctions in a single `.mcfunction` file.
 
 ```
-execute as @a[scores={time_alive=0}] run function example:player/on_death {
+execute as @a[scores={time_alive=0}] run function example:player/on_death
+{
     say Oh no!
     say That hurt!
 }
 ```
 
-## [Line Break Backslash](https://github.com/antD97/ShorthandCommands/wiki/Line-Break-Backslash)
+## [Repeat Lines](https://github.com/antD97/ShorthandCommands/wiki/Repeat-Lines)
 
-Break up long lines into multiple lines using `\`.
-
-```
-tellraw @a ["",{"text":"A long tellraw command\n","color":"aqua"},\
-               {"text":"that you can actually read.","color":"green"}]
-```
-
-## [`$` Namespace Prefix](https://github.com/antD97/ShorthandCommands/wiki/$-Namespace-Prefix)
-
-A shortened way of writing the namespace of your function.
+Repeat a line `n` times.
 
 ```
-function $:some/function
-scoreboard players set @a $cool 100
+#!10x
+particle minecraft:ambient_entity_effect ~ ~ ~ 170 0 0 255 0
+```
+
+## [Find & Multi-replace](https://github.com/antD97/ShorthandCommands/wiki/Find-&-Multi-replace)
+
+Repeat a line while replacing part of it with values from a list.
+
+```
+#!find=creeper
+#!replace=creeper|skeleton|zombie
+execute as @e[type=creeper] run say I'm a creeper!
 ```
 
 ## [Simplified Scoreboard Expressions](https://github.com/antD97/ShorthandCommands/wiki/Simplified-Scoreboard-Expressions)
@@ -103,20 +105,22 @@ A shortened way of writing `scoreboard player ...` commands.
 #!sb @s[type=creeper,scores={objective=111}] objective %= @s[type=zombie,scores={objective=222}] objective"
 ```
 
-## [Repeat Lines](https://github.com/antD97/ShorthandCommands/wiki/Repeat-Lines)
+## [`__` Namespace Prefix](https://github.com/antD97/ShorthandCommands/wiki/__-Namespace-Prefix)
 
-Repeat a line `n` times.
-
-```
-#!10x particle minecraft:ambient_entity_effect ~ ~ ~ 170 0 0 255 0
-```
-
-## [Multi-type Entity Selectors](https://github.com/antD97/ShorthandCommands/wiki/Multi-type-Entity-Selectors)
-
-Select multiple entity types in a single entity selector.
+A shortened way of writing the namespace of your function.
 
 ```
-execute as @e[type={zombie,creeper,skeleton}] run say I'm a hostile mob!
+function __:some/function
+scoreboard players set @a __cool 100
+```
+
+## [Line Break Backslash](https://github.com/antD97/ShorthandCommands/wiki/Line-Break-Backslash)
+
+Break up long lines into multiple lines using ``\``.
+
+```
+tellraw @a ["",{"text":"A long tellraw command\n","color":"aqua"},\
+               {"text":"that you can actually read.","color":"green"}]
 ```
 
 ## [Lint Hiding](https://github.com/antD97/ShorthandCommands/wiki/Lint-Hiding)
@@ -124,7 +128,14 @@ execute as @e[type={zombie,creeper,skeleton}] run say I'm a hostile mob!
 A makeshift way of hiding text editor error indicators.
 
 ```
-#! execute as @s[scores={$deaths=1}] run function $:my_function
+function my_namespace:introduce
+#! {
+    say Hello!
+    say I am @s!
+#! }
+
+#! tellraw @a ["",{"text":"A long tellraw command\n","color":"aqua"},\
+               #! {"text":"that you can actually read.","color":"green"}]
 ```
 
 ---

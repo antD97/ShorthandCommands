@@ -5,14 +5,14 @@
 package shorthandcommands.transformations
 
 /**
- * Transformation that replaces all occurrences of "$:" with the current namespace followed by colon
- * and all other occurrences of "$" with the current namespace followed by an underscore.
+ * Transformation that replaces all occurrences of "__:" with the current namespace followed by colon
+ * and all other occurrences of "__" with the current namespace followed by an underscore.
  */
 object NamespacePrefixTransformation : Transformation {
 
     override fun transform(lines: MutableList<String>, i: Int, namespace: String): Int {
-        lines[i] = lines[i].replace("$:", "$namespace:")
-        lines[i] = lines[i].replace("$", "${namespace}_")
+        lines[i] = lines[i].replace("__:", "$namespace:")
+        lines[i] = lines[i].replace("__", "${namespace}_")
         return 0
     }
 }

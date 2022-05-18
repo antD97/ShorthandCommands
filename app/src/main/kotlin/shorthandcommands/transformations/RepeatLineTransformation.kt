@@ -1,20 +1,31 @@
 package shorthandcommands.transformations
 
 /**
- * Lines that end with #<num>x have that line repeated <num> times.
- * ^\s*#!(\d+)x\s
+ * Lines that follow the format `#!<n>x` will be removed and repeat the following line `<n>` times.
+ * - Regex: `^\s*#!(\d+)x(?=\s*$)`
  */
 object RepeatLineTransformation : Transformation {
 
     override fun transform(lines: MutableList<String>, i: Int, namespace: String): Int? {
 
-        val (matchString, n) = "^\\s*#!(\\d+)x\\s".toRegex().find(lines[i])?.groupValues ?: return 0
+        val (fullCommand, n) = "^\\s*#!(\\d+)x(?=\\s*\$)".toRegex()
+            .find(lines[i])?.groupValues
+            ?.mapIndexed { _i, s -> if (_i == 0) s.trimStart() else s }
+            ?: return 0
 
-        val cleanedLine = lines[i].trimStart().removePrefix(matchString.trim()).trimStart()
+        if (i == lines.lastIndex) {
+            println("No line following \"$fullCommand\" to repeat." +
+                    "\nExiting...")
+            return null
+        }
+
+        // remove repeat command
         lines.removeAt(i)
 
-        for (i in 1..n.toInt()) lines.add(i, cleanedLine)
+        // add repeated lines
+        val lineToRepeat = lines[i]
+        for (i in 1 until n.toInt()) lines.add(i, lineToRepeat)
 
-        return 0
+        return -1
     }
 }

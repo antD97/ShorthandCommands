@@ -14,7 +14,7 @@ class TestFunctionDefinitionTransformation {
     @Test
     fun testTransform() {
 
-        val lines = mutableListOf(
+        var lines = mutableListOf(
             "function namespace:some/function/name    ",
             "{   ",
             "    statement one",
@@ -113,5 +113,34 @@ class TestFunctionDefinitionTransformation {
             1,
             "")
         )
+
+        lines = mutableListOf(
+            "namespace:function",
+            "{",
+            "",
+            "}"
+        )
+
+        assertEquals(-2, FunctionDefinitionTransformation.transform(lines, 1, "namespace"))
+        assertEquals(mutableListOf(), lines)
+
+        job = Transformer.createFunctionJobs.last()
+        assertEquals("namespace", job.namespace)
+        assertEquals("function", job.functionPath)
+        assertEquals("\n", job.file.readText())
+
+        lines = mutableListOf(
+            "namespace2:function2",
+            "{",
+            "}"
+        )
+
+        assertEquals(-2, FunctionDefinitionTransformation.transform(lines, 1, "namespace"))
+        assertEquals(mutableListOf(), lines)
+
+        job = Transformer.createFunctionJobs.last()
+        assertEquals("namespace2", job.namespace)
+        assertEquals("function2", job.functionPath)
+        assertEquals("", job.file.readText())
     }
 }

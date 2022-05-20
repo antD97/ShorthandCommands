@@ -76,7 +76,7 @@ internal object Transformer {
             job.file.applyTransformations(newFunctionFile, job.namespace)
 
             // add the header file text to the new function file
-            if (headerFile != null) {
+            if (newFunctionFile.exists() && headerFile != null) {
                 val tempFile = File.createTempFile("temp", null)
                 FileWriter(tempFile).use {
                     it.write(headerFile.readText() + "\n")
@@ -134,7 +134,10 @@ internal object Transformer {
         }
     }
 
-    /** Applies [transformations] to [this] and saves the result to [targetLoc]. */
+    /**
+     * Applies [transformations] to [this] and saves the result to [targetLoc]. If the resultant
+     * file would contain no commands, no file is created.
+     */
     private fun File.applyTransformations(targetLoc: File, nameSpace: String) {
         println("Transforming `${this.path}`...")
 

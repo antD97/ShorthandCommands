@@ -17,7 +17,7 @@ fun main() {
 
     val propertiesFile = File("shorthand.conf")
     if (!propertiesFile.isFile) {
-        println("Could not locate configuration file `${propertiesFile.absolutePath}`.\nExiting...")
+        printError("Could not locate configuration file `${propertiesFile.absolutePath}`.")
         exitProcess(-1)
     }
 
@@ -30,8 +30,7 @@ fun main() {
 
     // project directory check
     if (!projDir.isDirectory) {
-        println("Project directory `${projDir.path}` from `shorthand.conf` is not a directory." +
-                "\nExiting...")
+        printError("Project directory `${projDir.path}` from `shorthand.conf` is not a directory.")
         exitProcess(-1)
     }
 
@@ -39,8 +38,7 @@ fun main() {
 
     // save directory check
     if (!saveDir.isDirectory) {
-        println("Save directory `${saveDir.path}` from `shorthand.conf` is not a directory." +
-                "\nExiting...")
+        printError("Save directory `${saveDir.path}` from `shorthand.conf` is not a directory.")
         exitProcess(-1)
     }
 
@@ -48,19 +46,17 @@ fun main() {
 
     // transformed project directory check
     if (transformedProjDir.isFile) {
-        println("The save location for the converted project `${transformedProjDir.path}` is a " +
-                "file and will not be overwritten. Please move or delete this file and run the " +
-                "tool again." +
-                "\nExiting...")
+        printError("The save location for the converted project `${transformedProjDir.path}` is " +
+                "a file and will not be overwritten. Please move or delete this file and run the " +
+                "tool again.")
         exitProcess(-1)
     }
 
     // transformed project directory = save directory check
     if (projDir.canonicalFile == transformedProjDir.canonicalFile) {
-        println("The save location for the converted project is the same as the project " +
+        printError("The save location for the converted project is the same as the project " +
                 "directory `${projDir.path}`. Please change the save location in " +
-                "`shorthand.conf` file and run the tool again." +
-                "\nExiting...")
+                "`shorthand.conf` file and run the tool again.")
         exitProcess(-1)
     }
 
@@ -68,9 +64,8 @@ fun main() {
     val projDataDir = projDir.listFiles().find { it.name == "data" && it.isDirectory }
     val projPackFile = projDir.listFiles().find { it.name == "pack.mcmeta" && it.isFile }
     if (projDataDir == null || projPackFile == null) {
-        println("The project directory `${projDir.path}` needs to contain a data directory and " +
-                "`pack.mcmeta` file." +
-                "\nExiting...")
+        printError("The project directory `${projDir.path}` needs to contain a data directory " +
+                "and `pack.mcmeta` file.")
         exitProcess(-1)
     }
 
@@ -78,8 +73,8 @@ fun main() {
 
     // header file check
     if (!headerFile!!.isFile) {
-        println("Could not locate a `header.txt` file. No header will be added for newly created " +
-                ".mcfunction files.")
+        printWarning("Could not locate a `header.txt` file. No header will be added for newly " +
+                "created .mcfunction files.")
         headerFile = null
     }
 
@@ -92,20 +87,18 @@ fun main() {
         // directory to overwrite is not a datapack
         if (transformedProjDir.listFiles().none { it.name == "data" && it.isDirectory }
             || transformedProjPackFile == null) {
-            println("The save location for the converted project `${transformedProjDir.path}` is " +
-                    "not a datapack and will not be overwritten. Please move or delete this " +
-                    "directory and run the tool again." +
-                    "\nExiting...")
+            printError("The save location for the converted project `${transformedProjDir.path}` " +
+                    "is not a datapack and will not be overwritten. Please move or delete this " +
+                    "directory and run the tool again.")
             exitProcess(-1)
         }
 
         // directory to overwrite does not use the same `pack.mcmeta` file
         else if (projPackFile.readText() != transformedProjPackFile.readText()) {
-            println("The save location for the converted project `${transformedProjDir.path}` " +
+            printError("The save location for the converted project `${transformedProjDir.path}` " +
                     "has a different `pack.mcmeta` file than the source project " +
                     "`${projDir.path}` and will not be overwritten. Please move or delete this " +
-                    "project directory and run the tool again." +
-                    "\nExiting...")
+                    "project directory and run the tool again.")
             exitProcess(-1)
         }
 
@@ -117,7 +110,7 @@ fun main() {
 
                 println("Deleting `$transformedProjDir`...")
                 if (!transformedProjDir.deleteRecursively()) {
-                    println("Failed to delete `${transformedProjDir.path}`\nExiting...")
+                    printError("Failed to delete `${transformedProjDir.path}`")
                     exitProcess(-1)
                 }
             } else {
@@ -134,7 +127,7 @@ fun main() {
             val containsFunctionsDir = it.listFiles().any {
                 it.name == "functions" && it.isDirectory
             }
-            if (!containsFunctionsDir) println("Namespace directory `${it.path}` does not " +
+            if (!containsFunctionsDir) printWarning("Namespace directory `${it.path}` does not " +
                     "contain a `function` directory. Skipping...")
             containsFunctionsDir
         }
@@ -157,7 +150,7 @@ fun main() {
 }
 
 fun badConfig(property: String): String {
-    println("\"$property\" missing from `shorthand.conf`.\nExiting...")
+    printError("\"$property\" missing from `shorthand.conf`.")
     exitProcess(-1)
 }
 
@@ -171,11 +164,11 @@ fun File.copyDir(targetLoc: File, skipFiles: List<File>) {
     if (isDirectory) {
         try {
             if (!targetLoc.mkdir()) {
-                println("Failed to create directory: `${targetLoc.path}`\nExiting...")
+                printError("Failed to create directory: `${targetLoc.path}`")
                 exitProcess(-1)
             }
         } catch (e: IOException) {
-            println("Failed to create directory: `${targetLoc.path}`\nExiting...")
+            printError("Failed to create directory: `${targetLoc.path}`")
             exitProcess(-1)
         }
 
@@ -187,7 +180,7 @@ fun File.copyDir(targetLoc: File, skipFiles: List<File>) {
         try {
             this.copyTo(targetLoc)
         } catch (e: IOException) {
-            println("Failed to create file: `${targetLoc.name}`\nExiting...")
+            printError("Failed to create file: `${targetLoc.name}`")
             exitProcess(-1)
         }
     }

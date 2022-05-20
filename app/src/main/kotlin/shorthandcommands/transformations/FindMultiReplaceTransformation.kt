@@ -4,6 +4,8 @@
  */
 package shorthandcommands.transformations
 
+import shorthandcommands.printError
+
 /**
  * Pattern regex: `^\s*#!find=(.*)$`
  * Replace regex: `^\s*#!replace=(.*)$`
@@ -14,12 +16,11 @@ object FindMultiReplaceTransformation : Transformation {
 
         val (patternCommand, pattern) = "^\\s*#!find=(.*)\$".toRegex()
             .find(lines[i])?.groupValues
-            ?.mapIndexed { i, s -> if (i == 0) s.trimStart() else s }
+            ?.mapIndexed { index, s -> if (index == 0) s.trimStart() else s }
             ?: return 0
 
         if (i + 2 > lines.lastIndex) {
-            println("There needs to be at least two lines following \"$patternCommand\".\n" +
-                    "Exiting...")
+            printError("There needs to be at least two lines following \"$patternCommand\".")
             return null
         }
 
@@ -27,8 +28,7 @@ object FindMultiReplaceTransformation : Transformation {
             .find(lines[i + 1])?.groupValues
             ?.mapIndexed { _i, s -> if (_i == 0) s.trimStart() else s }
             ?: run {
-                println("Could not parse \"${lines[i + 1]}\".\n" +
-                        "Exiting...")
+                printError("Could not parse \"${lines[i + 1]}\".\n")
                 return null
             }
 

@@ -5,6 +5,7 @@
 package shorthandcommands.transformations
 
 import shorthandcommands.Transformer
+import shorthandcommands.printError
 import java.io.File
 import java.io.FileWriter
 
@@ -20,8 +21,7 @@ internal object FunctionDefinitionTransformation : Transformation {
         if (lines[i].trim() != "{") return 0
 
         if (i == 0) {
-            println("No line preceding { to create a function definition." +
-                    "\nExiting...")
+            printError("No line preceding { to create a function definition.")
             return null
         }
 
@@ -32,8 +32,7 @@ internal object FunctionDefinitionTransformation : Transformation {
                     .find(lines[i - 1])?.groupValues
                     ?.mapIndexed { _i, s -> if (_i == 0) s.trimStart() else s }
                 ?: run {
-                    println("Could not parse function definition from \"${lines[i - 1]}\"." +
-                            "\nExiting...")
+                    printError("Could not parse function definition from \"${lines[i - 1]}\".")
                     return null
                 }
 
@@ -59,19 +58,13 @@ internal object FunctionDefinitionTransformation : Transformation {
 
         // no matching }
         if (!found) {
-            println(
-                "Could not find the matching bracket for the function body \"$functionPath\".\n" +
-                        "Exiting..."
-            )
+            printError("Could not find the matching bracket for the function body \"$functionPath\".")
             return null
         }
 
         // check matching } is on its own line
         if (lines[j].trim() != "}") {
-            println(
-                "Closing bracket for \"$functionPath\" needs to be on its own line.\n" +
-                        "Exiting..."
-            )
+            printError("Closing bracket for \"$functionPath\" needs to be on its own line.")
             return null
         }
 

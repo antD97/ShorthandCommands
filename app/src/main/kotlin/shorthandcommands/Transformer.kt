@@ -15,13 +15,15 @@ internal object Transformer {
 
     /** Transformations to apply when calling [applyTransformations]. */
     private val transformations = listOf(
+        PreSyntaxCheckTransformation,
         HideLintTransformation, // must be applied first
         LineBreakTransformation, // must be applied after HideLintTransformation
         NamespacePrefixTransformation, // must be applied before FunctionDefinitionTransformation
         FunctionDefinitionTransformation,
         RepeatLineTransformation,
         ScoreboardExpressionTransformation,
-        FindMultiReplaceTransformation
+        FindMultiReplaceTransformation,
+        PostSyntaxCheckTransformation
     )
 
     internal data class CreateFunctionJob(
@@ -58,17 +60,15 @@ internal object Transformer {
                 try {
                     newFunctionFile.parentFile.mkdirs()
                 } catch (e: IOException) {
-                    println("Failed to create directory: `${newFunctionFile.parentFile.path}`\n" +
-                            "Exiting...")
+                    printError("Failed to create directory: `${newFunctionFile.parentFile.path}`")
                     exitProcess(-1)
                 }
             }
 
             // file already exists
             if (newFunctionFile.exists()) {
-                println("Cannot create new function file `${newFunctionFile.path}` because it" +
-                        "already exists.\n" +
-                        "Exiting...")
+                printError("Failed to create new function file `${newFunctionFile.path}` because " +
+                        "it already exists.\n")
                 exitProcess(-1)
             }
 
@@ -86,7 +86,7 @@ internal object Transformer {
                 try {
                     tempFile.copyTo(newFunctionFile, true)
                 } catch (e: IOException) {
-                    println("Failed to copy file to: `${tempFile.name}`\nExiting...")
+                    printError("Failed to copy file to: `${tempFile.name}`")
                     exitProcess(-1)
                 }
             }
@@ -105,12 +105,12 @@ internal object Transformer {
             // copy
             try {
                 if (!targetLoc.mkdir()) {
-                    println("Failed to create directory: `${targetLoc.path}`\nExiting...")
+                    printError("Failed to create directory: `${targetLoc.path}`")
+                    exitProcess(-1)
                 }
             } catch (e: SecurityException) {
-                println("Security violation while trying to create directory: " +
-                        "`${targetLoc.path}`\n" +
-                        "Exiting...")
+                printError("Security violation while trying to create directory: " +
+                        "`${targetLoc.path}`")
                 exitProcess(-1)
             }
 
@@ -128,7 +128,7 @@ internal object Transformer {
             try {
                 this.copyTo(targetLoc)
             } catch (e: IOException) {
-                println("Failed to create file: `${targetLoc.name}`\nExiting...")
+                printError("Failed to create file: `${targetLoc.name}`")
                 exitProcess(-1)
             }
         }

@@ -1,4 +1,10 @@
+/*
+ * Copyright © 2022 antD97
+ * Licensed under the MIT License https://antD.mit-license.org/
+ */
 package shorthandcommands.transformations
+
+import shorthandcommands.printError
 
 /**
  * Lines that follow the format `#!<n>x` will be removed and repeat the following line `<n>` times.
@@ -14,8 +20,7 @@ object RepeatLineTransformation : Transformation {
             ?: return 0
 
         if (i == lines.lastIndex) {
-            println("No line following \"$fullCommand\" to repeat." +
-                    "\nExiting...")
+            printError("No line following \"$fullCommand\" to repeat.")
             return null
         }
 

@@ -161,6 +161,9 @@ internal object Transformer {
                     it.write("$line\n")
                 }
             }
+        } else {
+            println("`${this.path}` contains no commands after transformations. It will not be " +
+                    "saved in the output project.")
         }
     }
 }

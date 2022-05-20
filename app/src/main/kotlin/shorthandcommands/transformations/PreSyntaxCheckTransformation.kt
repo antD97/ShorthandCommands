@@ -15,8 +15,8 @@ object PreSyntaxCheckTransformation : Transformation {
     override fun transform(lines: MutableList<String>, i: Int, namespace: String): Int? {
         val line = lines[i]
 
-        // ^\s*#\s+!
-        "^\\s*#\\s+!".toRegex().find(line)?.groupValues?.get(1)?.let {
+        // ^\s*(#\s+!)
+        "^\\s*(#\\s+!)".toRegex().find(line)?.groupValues?.get(1)?.let {
             printRecommendation(it, "#!", i)
         }
 

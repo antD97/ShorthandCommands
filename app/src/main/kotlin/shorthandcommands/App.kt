@@ -135,7 +135,14 @@ fun main() {
 
     // copy the source project directory
     println("Copying source project...")
-    projDir.copyDir(transformedProjDir, projFunctionsDirs)
+
+    transformedProjDir.mkdir()
+    projPackFile.copyTo(transformedProjDir.resolve(projPackFile.name))
+
+    val projPackPngFile = projDir.listFiles().find { it.name == "pack.png" && it.isFile }
+    projPackPngFile?.copyTo(transformedProjDir.resolve(projPackPngFile.name))
+
+    projDataDir.copyDir(transformedProjDir.resolve("data"), projFunctionsDirs)
 
     // transform function directories
     for (functionDir in projFunctionsDirs) {

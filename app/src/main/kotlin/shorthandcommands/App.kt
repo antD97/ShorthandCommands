@@ -125,13 +125,17 @@ fun main() {
         .filter { it.name != "minecraft" && it.isDirectory }
         .filter {
             val containsFunctionsDir = it.listFiles().any {
-                it.name == "functions" && it.isDirectory
+                listOf("functions", "function").contains(it.name) && it.isDirectory
             }
-            if (!containsFunctionsDir) printWarning("Namespace directory `${it.path}` does not " +
-                    "contain a `function` directory. Skipping...")
+            if (!containsFunctionsDir) {
+                printWarning("Namespace directory `${it.path}` does not contain a `function` directory. Skipping...")
+            }
             containsFunctionsDir
         }
-        .map { it.resolve("functions") }
+        .map {
+            if (it.listFiles().any { it.name == "function" }) it.resolve("function")
+            else it.resolve("functions")
+        }
 
     // copy the source project directory
     println("Copying source project...")

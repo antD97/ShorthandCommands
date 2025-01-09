@@ -53,7 +53,7 @@ internal object Transformer {
 
             val newFunctionFile = newDataDir
                 .resolve(job.namespace)
-                .resolve("functions/${job.functionPath}.mcfunction")
+                .resolve("${functionDir.name}/${job.functionPath}.mcfunction")
 
             // ensure the function file has a directory to go into
             if (!newFunctionFile.parentFile.exists()) {

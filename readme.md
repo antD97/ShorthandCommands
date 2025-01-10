@@ -1,6 +1,10 @@
 # Shorthand Commands
 
-<!-- [![GitHub release](https://img.shields.io/github/downloads/antD97/ShorthandCommands/v1.0/total)](https://github.com/antD97/ShorthandCommands/releases/tag/v1.0) -->
+[![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/antD97/ShorthandCommands/total?logo=github)](https://github.com/antD97/ShorthandCommands/releases)
+[![GitHub Repo stars](https://img.shields.io/github/stars/antD97/ShorthandCommands?style=flat&logo=github)](https://github.com/antD97/ShorthandCommands/stargazers)
+[![Discord](https://img.shields.io/discord/1327005882113986772?logo=discord&label=discord)](https://discord.gg/kqQQkGVh)
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/antd_)
+[![GitHub License](https://img.shields.io/github/license/antD97/ShorthandCommands)](/LICENSE)
 
 Shorthand Commands is a simple transpiler tool that enables [Minecraft](https://minceraft.net/)
 [datapack](https://minecraft.fandom.com/wiki/Data_pack) developers to use additional convenient
